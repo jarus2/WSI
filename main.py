@@ -1,4 +1,6 @@
 # podstawowy pagerank bez preferencji użytkownika
+# ze niewłaściwymi fuzzy sets
+# do testów
 
 import numpy as np
 import skfuzzy as fuzz # pip install scikit-fuzzy
