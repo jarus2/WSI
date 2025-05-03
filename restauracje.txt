@@ -29,4 +29,22 @@ La Trattoria,włoska,59,4.0,1.5
 Wasabi Bar,sushi,79,4.4,3.0
 Karczma u Marty,polska,40,3.9,1.2
 Grill House,amerykańska,52,4.2,3.4
+Casa di Roma,włoska,64,4.2,6.7
+Sakura Sushi,sushi,91,4.9,8.3
+Pierogarnia Babuni,polska,34,4.4,5.1
+Spice Route,hinduska,73,4.5,7.9
+Burrito Bros,meksykańska,49,4.0,6.2
+Little Italy,włoska,58,3.8,9.1
+Samurai Sushi,sushi,86,4.7,7.5
+Bar Prl,polska,30,3.6,6.4
+Curry Palace,hinduska,71,4.6,9.5
+Tex-Mex Fiesta,meksykańska,53,4.1,8.0
+Ristorante Milano,włoska,66,4.3,7.2
+Sushi Garden,sushi,89,4.8,9.8
+Chata Polska,polska,41,4.2,8.7
+Namaste India,hinduska,68,4.4,6.9
+El Sombrero,meksykańska,60,3.9,7.3
+Route 77,amerykańska,56,4.0,6.6
+Brooklyn Bites,amerykańska,62,4.5,9.0
+Polski Stół,polska,37,3.8,7.6
 
