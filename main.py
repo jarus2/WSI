@@ -1,3 +1,5 @@
+# podstawowy pagerank bez preferencji użytkownika
+
 import numpy as np
 import skfuzzy as fuzz # pip install scikit-fuzzy
 import pandas as pd # pip install pandas

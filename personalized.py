@@ -1,3 +1,7 @@
+# page rank personalizowany poprzez:
+# - dodanie preferencji do pagerank
+# -> dodaje średnii boost do preferencji
+
 import numpy as np
 import skfuzzy as fuzz
 import pandas as pd

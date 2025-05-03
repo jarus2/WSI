@@ -1,3 +1,7 @@
+# page rank personalizowany poprzez:
+# - dodanie wierzchołka użytkownik
+# - użytkownik brany po uwage w page rank ale nie w wynikach
+# -> dodaje duży boost do preferencji
 import numpy as np
 import skfuzzy as fuzz
 import pandas as pd
