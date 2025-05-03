@@ -1,0 +1,32 @@
+nazwa,kuchnia,cena,ocena,odleglosc_km
+Mamma Mia,włoska,62,4.3,2.2
+Sushi Zen,sushi,78,4.6,3.8
+Bar Mleczny Miś,polska,28,4.0,0.4
+Bombay Express,hinduska,66,4.4,3.5
+Taco Time,meksykańska,52,3.8,2.6
+Włoska Robota,włoska,70,4.7,1.9
+Sushi Go!,sushi,88,4.9,4.1
+Burger Town,amerykańska,48,4.2,1.4
+Złoty Widelec,polska,42,4.5,0.9
+Himalaya Spice,hinduska,72,4.0,4.6
+El Paso,meksykańska,58,4.3,2.8
+Donatello,włoska,55,3.9,3.1
+Tokyo Express,sushi,82,4.7,5.0
+Grandma's Kitchen,polska,36,4.2,1.1
+Route 66,amerykańska,50,4.1,2.5
+Saffron Lounge,hinduska,74,4.8,3.3
+Vesuvio,włoska,68,4.5,3.7
+Omakase House,sushi,95,5.0,4.9
+Bar u Jasia,polska,32,3.7,0.3
+New York Diner,amerykańska,60,4.0,2.0
+Tandoori Hut,hinduska,69,4.3,1.8
+Pizza Nostra,włoska,63,4.4,2.7
+Sushi Nami,sushi,84,4.8,3.6
+Polskie Jadło,polska,38,4.1,0.7
+BBQ Central,amerykańska,55,4.3,4.2
+Masala Magic,hinduska,67,4.6,2.4
+La Trattoria,włoska,59,4.0,1.5
+Wasabi Bar,sushi,79,4.4,3.0
+Karczma u Marty,polska,40,3.9,1.2
+Grill House,amerykańska,52,4.2,3.4
+
