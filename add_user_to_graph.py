@@ -3,23 +3,28 @@
 # - użytkownik brany po uwage w page rank ale nie w wynikach
 # -> dodaje duży boost do preferencji
 import numpy as np
-import skfuzzy as fuzz
-import pandas as pd
-import networkx as nx
+import skfuzzy as fuzz # pip install scikit-fuzzy
+import pandas as pd # pip install pandas
+import networkx as nx # pip install networkx
 
-# === KROK 1: Wczytaj dane ===
+# ===== dane =====
 df = pd.read_csv("restauracje.txt")
 
-# === KROK 2: Rozmycie cech ===
+# ===== Romywanie cech =====
 cena_range = np.arange(0, 201, 1)
 ocena_range = np.arange(0, 5.1, 0.1)
 odl_range = np.arange(0, 11, 0.1)
 
-# Funkcje przynależności
+# trójkątne funkcje przynaleźności
 tania = fuzz.trimf(cena_range, [0, 0, 60])
 srednia = fuzz.trimf(cena_range, [40, 80, 120])
 droga = fuzz.trimf(cena_range, [100, 150, 200])
 
+blisko = fuzz.trimf(odl_range, [0, 0, 2.5])
+srednio_daleko = fuzz.trimf(odl_range, [1.5, 4, 6])
+daleko = fuzz.trimf(odl_range, [5, 8, 10])
+
+# trapezowe funkcje przynależności
 def mu_ocena_niska(x):
     if x <= 2.0:
         return 1
@@ -48,10 +53,6 @@ def mu_ocena_bardzo_dobra(x):
     else:
         return 1
 
-blisko = fuzz.trimf(odl_range, [0, 0, 2.5])
-srednio_daleko = fuzz.trimf(odl_range, [1.5, 4, 6])
-daleko = fuzz.trimf(odl_range, [5, 8, 10])
-
 def fuzzify_row(row):
     cena = row['cena']
     ocena = row['ocena']
@@ -71,10 +72,9 @@ def fuzzify_row(row):
         'daleko': fuzz.interp_membership(odl_range, daleko, odl),
     })
 
-# Tworzymy ramkę z fuzzy cechami
 fuzzy_df = df.join(df.apply(fuzzify_row, axis=1))
 
-# === KROK 3: Budowa grafu ===
+# ===== Budowa grafu =====
 def podobienstwo_fuzzy(row1, row2):
     cechy = ['tania', 'srednia_cena', 'droga',
              'ocena_niska', 'ocena_dobra', 'ocena_bardzo_dobra',
@@ -91,11 +91,11 @@ def podobienstwo_fuzzy(row1, row2):
 
 G = nx.DiGraph()
 
-# Dodaj wierzchołki
+# dodanie wszystkich wierzchołków
 for idx, row in fuzzy_df.iterrows():
     G.add_node(row['nazwa'], kuchnia=row['kuchnia'])
 
-# Dodaj krawędzie z wagami podobieństwa
+# dodanie wszystkich krawędzi
 for i, row1 in fuzzy_df.iterrows():
     for j, row2 in fuzzy_df.iterrows():
         if i != j:
@@ -103,13 +103,13 @@ for i, row1 in fuzzy_df.iterrows():
             if waga > 0.1:
                 G.add_edge(row1['nazwa'], row2['nazwa'], weight=waga)
 
-# === KROK 4: Preferencje użytkownika ===
+# ===== Preferencje użytkownika =====
 ulubiona_kuchnia = input("Jaka kuchnia Cię interesuje? (np. włoska, sushi) [ENTER = dowolna]: ").strip().lower()
 odl_input = input("Maksymalna odległość (km) [ENTER = brak limitu]: ").strip()
 cena_input = input("Maksymalna cena (zł) [ENTER = brak limitu]: ").strip()
 ocena_pref = input("Preferowana jakość oceny? [każda / dobra / bardzo dobra]: ").strip().lower()
 
-
+# wczytanie wartości z uwzględnieniem ich braku
 try:
     max_odleglosc = float(odl_input) if odl_input else float('inf')
 except ValueError:
@@ -120,7 +120,7 @@ try:
 except ValueError:
     max_cena = float('inf')
 
-# === KROK 5: Dodanie wierzchołka użytkownika ===
+# ===== dodanie użytkownika do grafu =====
 G.add_node('Użytkownik')
 
 def stopien_preferencji(row):
@@ -132,16 +132,16 @@ def stopien_preferencji(row):
     if row['odleglosc_km'] <= max_odleglosc:
         score += 0.3
 
-    # Ocena preferowana
+    # wymuszenie preferowanej oceny
     if ocena_pref == 'dobra' and row['ocena_dobra'] < 0.5 and row['ocena_bardzo_dobra'] < 0.5:
-        return 0  # odrzucamy (można zamienić na boost)
+        return 0  
     elif ocena_pref == 'bardzo dobra' and row['ocena_bardzo_dobra'] < 0.5:
-        return 0  # odrzucamy (można zamienić na boost)
+        return 0
 
     return score
 
 
-# Połączenia od użytkownika do preferowanych restauracji
+# krawędzie od użytkownika
 preferencje = {}
 for idx, row in fuzzy_df.iterrows():
     pref = stopien_preferencji(row)
@@ -149,19 +149,19 @@ for idx, row in fuzzy_df.iterrows():
         G.add_edge('Użytkownik', row['nazwa'], weight=pref)
         preferencje[row['nazwa']] = pref
 
-# === KROK 6: PageRank z personalizacją od użytkownika ===
+# ===== Pagerank z personalizacją na użytkownika =====
 personalization = {node: 0 for node in G.nodes()}
 personalization['Użytkownik'] = 1.0
 
 pagerank_scores = nx.pagerank(G, alpha=0.85, personalization=personalization, weight='weight')
 
-# === KROK 7: Filtracja wyników ===
-pagerank_scores.pop('Użytkownik', None)  # Usuń użytkownika z wyników
+# ===== filtracja wyników =====
+pagerank_scores.pop('Użytkownik', None)  # usunięcie użytkownika
 
 filtrowane = fuzzy_df.copy()
 filtrowane['pagerank'] = filtrowane['nazwa'].map(pagerank_scores)
 
-# (opcjonalna dodatkowa filtracja, już niekonieczna przy węźle użytkownika)
+# dodatkowa filtracja z wymuszeniem opcji dla użytkownika
 if ulubiona_kuchnia:
     filtrowane = filtrowane[filtrowane['kuchnia'].str.lower() == ulubiona_kuchnia]
 filtrowane = filtrowane[
@@ -169,10 +169,11 @@ filtrowane = filtrowane[
     (filtrowane['cena'] <= max_cena)
 ]
 
-filtrowane = fuzzy_df.copy() #test pagerank
+# opcja bez wymuszania
+filtrowane = fuzzy_df.copy() 
 filtrowane['pagerank'] = filtrowane['nazwa'].map(pagerank_scores)
 
-# === KROK 8: Rekomendacje ===
+# ===== Wyświetlenie rekomendacji =====
 rekomendacje = filtrowane.sort_values(by='pagerank', ascending=False)
 
 print("\n📌 Najlepsze restauracje dla Ciebie:\n")
