@@ -126,11 +126,11 @@ G.add_node('Użytkownik')
 def stopien_preferencji(row):
     score = 0
     if ulubiona_kuchnia and row['kuchnia'].lower() == ulubiona_kuchnia:
-        score += 0.8
+        score += 0.9
     if row['cena'] <= max_cena:
-        score += 0.5
+        score += 0.7
     if row['odleglosc_km'] <= max_odleglosc:
-        score += 0.3
+        score += 0.5
 
     # wymuszenie preferowanej oceny
     if ocena_pref == 'dobra' and row['ocena_dobra'] < 0.5 and row['ocena_bardzo_dobra'] < 0.5:
@@ -140,11 +140,27 @@ def stopien_preferencji(row):
 
     return score
 
+def stopien_preferencji_strict(row):
+    if ulubiona_kuchnia and row['kuchnia'].lower() != ulubiona_kuchnia:
+        return 0
+    if row['cena'] > max_cena:
+        return 0
+    if row['odleglosc_km'] > max_odleglosc:
+        return 0
+    if ocena_pref == 'dobra' and row['ocena_dobra'] < 0.5 and row['ocena_bardzo_dobra'] < 0.5:
+        return 0
+    if ocena_pref == 'bardzo dobra' and row['ocena_bardzo_dobra'] < 0.5:
+        return 0
+
+    return 1 
+
+
 
 # krawędzie od użytkownika
 preferencje = {}
 for idx, row in fuzzy_df.iterrows():
     pref = stopien_preferencji(row)
+    #pref = stopien_preferencji_strict(row)
     if pref > 0:
         G.add_edge('Użytkownik', row['nazwa'], weight=pref)
         preferencje[row['nazwa']] = pref
@@ -176,9 +192,9 @@ filtrowane['pagerank'] = filtrowane['nazwa'].map(pagerank_scores)
 # ===== Wyświetlenie rekomendacji =====
 rekomendacje = filtrowane.sort_values(by='pagerank', ascending=False)
 
-print("\n📌 Najlepsze restauracje dla Ciebie:\n")
+print("\n Najlepsze restauracje:\n")
 if rekomendacje.empty:
-    print("⚠️ Nie znaleziono restauracji spełniających kryteria.")
+    print("Nie znaleziono restauracji.")
 else:
     for i, row in rekomendacje.iterrows():
         print(f"⭐ {row['nazwa']} | Kuchnia: {row['kuchnia']} | Cena: {row['cena']} zł | "

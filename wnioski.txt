@@ -1,0 +1,9 @@
+Wnioski do final raport
+
+1. PageRank nie zawsze daje nam najlepszą rekomendację, gdyż jest mocno zależny od popularności trędu
+2. nasza metoda jest mocno zależna od bazy zapisanych restauracji
+3. dobranie "obiektywnych" zależności między ceną, odległością i opinią jest praktycznie niemożliwe,
+szczególnie dla różnorodnych danych
+4. aby dostać w miarę odpowiednią rekomendację dla użytkownika trzeba bardzo wysoko go postawić
+(jego połączenia w grafie będą miały najwyższe wartości)
+5. bardzo surowe podejście pozwala na lepszą propozycję ale jeżeli rzadna restauracja nie spełnia wymagań to pagerank wynosi 0 dla wszystkich 
