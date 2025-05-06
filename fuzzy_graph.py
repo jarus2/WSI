@@ -1,6 +1,6 @@
 import networkx as nx
 
-
+# ===== obliczanie podobieństwa dwóch wierszy =====
 def podobienstwo_fuzzy(row1, row2):
     cechy = ['tania', 'srednia_cena', 'droga',
              'ocena_niska', 'ocena_dobra', 'ocena_bardzo_dobra',
@@ -16,7 +16,7 @@ def podobienstwo_fuzzy(row1, row2):
     return podobienstwo_cech
 
 
-
+# ===== obliczanie stopnia w jakim dany użytkownik preferuje daną restaurację =====
 def stopien_preferencji(row, ulubiona_kuchnia, max_cena, max_odleglosc, ocena_pref):
     score = 0
     if ulubiona_kuchnia and row['kuchnia'].lower() == ulubiona_kuchnia:
@@ -34,10 +34,11 @@ def stopien_preferencji(row, ulubiona_kuchnia, max_cena, max_odleglosc, ocena_pr
     return score
 
 
-
+# ===== budowanie grafu uwzględniającego preferencje użytkownika dotyczące restauracji =====
 def build_graph(fuzzy_df, ulubiona_kuchnia, max_cena, max_odleglosc, ocena_pref):
-    G = nx.DiGraph()
+    G = nx.DiGraph()    
 
+    # dodawanie restauracji do grafu
     for _, row in fuzzy_df.iterrows():
         G.add_node(row['nazwa'], kuchnia=row['kuchnia'])
 
@@ -48,9 +49,11 @@ def build_graph(fuzzy_df, ulubiona_kuchnia, max_cena, max_odleglosc, ocena_pref)
                 if waga > 0.1:
                     G.add_edge(row1['nazwa'], row2['nazwa'], weight=waga)
 
+    # dodawanie użytkownika do grafu
     G.add_node('Użytkownik')
     preferencje = {}
 
+    # ustawianie preferencji użytkownika dla każdej z dodanych restauracji
     for _, row in fuzzy_df.iterrows():
         pref = stopien_preferencji(row, ulubiona_kuchnia, max_cena, max_odleglosc, ocena_pref)
         if pref > 0:
