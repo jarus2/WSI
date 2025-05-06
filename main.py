@@ -3,6 +3,7 @@ import networkx as nx
 from fuzzy_logic import fuzzify_row
 from fuzzy_graph import build_graph
 from user_input import get_user_preferences
+from strict_filtering import apply_strict_filtering, show_filtered_results
 
 # ===== dane =====
 df = pd.read_csv("restauracje.txt")
@@ -28,6 +29,12 @@ if rekomendacje.empty:
     print("Nie znaleziono restauracji.")
 else:
     for _, row in rekomendacje.iterrows():
-        print(f"⭐ {row['nazwa']} | Kuchnia: {row['kuchnia']} | Cena: {row['cena']} zł | "
+        print(f"- {row['nazwa']} | Kuchnia: {row['kuchnia']} | Cena: {row['cena']} zł | "
               f"Ocena: {row['ocena']} | Odległość: {row['odleglosc_km']} km | PageRank: {row['pagerank']:.4f}")
 
+
+# ===== dodatkowa opcjonalna filtracja =====
+filtruj = input("\nCzy wyświetlić tylko restauracje ściśle spełniające kryteria? (tak/nie): ").strip().lower()
+if filtruj == 'tak':
+    filtrowane = apply_strict_filtering(fuzzy_df, ulubiona_kuchnia, max_cena, max_odleglosc)
+    show_filtered_results(filtrowane)
