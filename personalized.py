@@ -82,9 +82,9 @@ def podobienstwo_fuzzy(row1, row2):
 
     # Uwzględnienie kuchni
     if row1['kuchnia'].lower() == row2['kuchnia'].lower():
-        podobienstwo_cech *= 1.2  # Zwiększamy podobieństwo, jeśli kuchnia jest ta sama
+        podobienstwo_cech *= 1.2  
     else:
-        podobienstwo_cech *= 0.5  # Zmniejszamy podobieństwo, jeśli kuchnia jest inna
+        podobienstwo_cech *= 0.5  
     
     return podobienstwo_cech
 
@@ -92,11 +92,9 @@ def podobienstwo_fuzzy(row1, row2):
 
 G = nx.DiGraph()
 
-# Dodaj wierzchołki
 for idx, row in fuzzy_df.iterrows():
     G.add_node(row['nazwa'], kuchnia=row['kuchnia'])
 
-# Dodaj krawędzie z wagami podobieństwa
 for i, row1 in fuzzy_df.iterrows():
     for j, row2 in fuzzy_df.iterrows():
         if i != j:
@@ -109,7 +107,6 @@ ulubiona_kuchnia = input("Jaka kuchnia Cię interesuje? (np. włoska, sushi) [EN
 odl_input = input("Maksymalna odległość (km) [ENTER = brak limitu]: ").strip()
 cena_input = input("Maksymalna cena (zł) [ENTER = brak limitu]: ").strip()
 
-# Przekształć dane
 try:
     max_odleglosc = float(odl_input) if odl_input else float('inf')
 except ValueError:
@@ -150,8 +147,6 @@ filtrowane = filtrowane[
     (filtrowane['odleglosc_km'] <= max_odleglosc) &
     (filtrowane['cena'] <= max_cena)
 ]
-
-filtrowane = fuzzy_df.copy()#test pagerank
 
 
 filtrowane['pagerank'] = filtrowane['nazwa'].map(pagerank_scores)
