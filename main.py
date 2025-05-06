@@ -6,7 +6,7 @@ import networkx as nx # pip install networkx
 # ===== dane =====
 df = pd.read_csv("restauracje.txt")
 
-# ===== Romywanie cech =====
+# ===== Rozmywanie cech =====
 cena_range = np.arange(0, 201, 1)
 ocena_range = np.arange(0, 5.1, 0.1)
 odl_range = np.arange(0, 11, 0.1)

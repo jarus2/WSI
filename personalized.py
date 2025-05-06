@@ -166,3 +166,4 @@ else:
     for i, row in rekomendacje.iterrows():
         print(f"⭐ {row['nazwa']} | Kuchnia: {row['kuchnia']} | Cena: {row['cena']} zł | "
               f"Ocena: {row['ocena']} | Odległość: {row['odleglosc_km']} km | PageRank: {row['pagerank']:.4f}")
+
